@@ -1,4 +1,4 @@
-const { Command } = require('commander');
+import { Command } from 'commander';
 const program = new Command();
 import {dlDatagouvFiles} from './dl_datagouv_files';
 

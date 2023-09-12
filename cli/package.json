@@ -3,9 +3,6 @@
     "start": "npx tsc && node dist/app.js"
   },
   "dependencies": {
-    "@inquirer/prompts": "^3.1.1",
-    "@types/inquirer": "^9.0.3",
-    "@types/node": "^20.6.0",
     "commander": "^11.0.0",
     "dotenv": "^16.3.1",
     "fs.promises": "^0.1.2",
@@ -13,5 +10,11 @@
     "tslint": "^6.1.3",
     "typescript": "^5.2.2",
     "yaml": "^2.3.2"
+  },
+  "devDependencies": {
+    "@inquirer/prompts": "^3.1.1",
+    "@types/inquirer": "^9.0.3",
+    "@types/node": "^20.6.0",
+    "@types/node-fetch": "^2.6.4"
   }
 }

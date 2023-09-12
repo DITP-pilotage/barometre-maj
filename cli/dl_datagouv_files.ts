@@ -1,10 +1,9 @@
-import { rejects } from 'assert';
 import {config} from './config'
-const fetch = require('node-fetch')
-require('dotenv').config();
+import fetch from 'node-fetch';
+import 'dotenv/config';
 
-const https = require('https'); // or 'https' for https:// URLs
-const fs = require('fs');
+import * as https from 'https'
+import * as fs from 'fs'
 
 function dl(url: string, outfile: string) {
 
