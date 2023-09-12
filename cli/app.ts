@@ -10,10 +10,10 @@ program
 program.command('dl-datagouv')
   .description('Télécharge les fichiers actuellement présents sur datagouv')
   .option('-d, --destination <path>', 'destination directory', '.data')
-  .action((opts:any, _:any) => {
+  .action(async (opts:any, _:any) => {
     
-    dlDatagouvFiles(opts.destination);
-    
+    await dlDatagouvFiles(opts.destination);
+
   });
 
 program.parse();
