@@ -25,20 +25,17 @@ function dl(url: string, outfile: string) {
     
 }
 
-export async function dlDatagouvFiles(dest: string): Promise<void> {
+export async function dlDatagouvFiles(dest: string= config.OUT_DIR): Promise<void> {
 
     const datagouvEnv = config.datagouv.demo;
     config.datagouv.demo.API_BASE_URL
 
-    console.log([datagouvEnv.API_BASE_URL, 'datasets', process.env.DATASET_DEMO].join('/') );
-    
     return fetch([datagouvEnv.API_BASE_URL, 'datasets', process.env.DATASET_DEMO].join('/'), {
         "method": "GET"
     })
     .then((r: any) => r.json())
     .then((r: any) => {
-        console.log(r);
-        let mapped= r.resources.map((e: any) => ({
+        let mapped : any[] = r.resources.map((e: any) => ({
             id: e.id,
             created_at: e.created_at,
             last_modified: e.last_modified,
@@ -48,7 +45,7 @@ export async function dlDatagouvFiles(dest: string): Promise<void> {
             description: e.description,
             format: e.format
         }));
-        
+        console.log(mapped.slice(1,3));
         return mapped;
     }).then(async (mapped: any) => {
         for (let resource of mapped) {

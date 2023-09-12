@@ -1,6 +1,5 @@
 const { Command } = require('commander');
 const program = new Command();
-import { config } from './config';
 import {dlDatagouvFiles} from './dl_datagouv_files';
 
 program
@@ -10,9 +9,9 @@ program
 
 program.command('dl-datagouv')
   .description('Télécharge les fichiers actuellement présents sur datagouv')
-  .option('-d, --destination <path>', 'destination directory', config.OUT_DIR)
-  .action(async (opts:any, _:any) => {
-    
+  .option('-d, --destination <path>', 'destination directory')
+  .action(async (opts:{destination: string}, _:any) => {
+
     await dlDatagouvFiles(opts.destination);
 
   });
