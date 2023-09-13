@@ -15,9 +15,44 @@ export type DatagouvResourceCustom = {
     format: string
 }
 
-function handleFileFound(resource: DatagouvResourceCustom, commid_id: string) {
+function descriptionBuilder(commid_id: string): string {
+    return ["commit", "::", commid_id].join("");
+}
+
+function updateDescription(resource: DatagouvResourceCustom, description: string): Promise<void>{
+
+    let datagouvEnv = config.datagouv.test;
+
+    return fetch([datagouvEnv.API_BASE_URL, "datasets", process.env.DATASET_TEST, "resources", resource.id].join("/"), {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json',
+            "X-API-KEY": process.env.DEMO_API_KEY!,
+        },
+        body: JSON.stringify({"description": description})
+    }).then(r => r.json())
+    .then((r: any) => {
+        console.log(r);
+        console.log("New description of resource "+r.title+" set to "+r.description);
+        
+    })
+}
+
+function handleFileFound(resource: DatagouvResourceCustom, commid_id: string): Promise<void> {
     console.log("File found at "+resource.url)
     // TODO: update datagouv resource
+
+
+    let expectedDescription: string = descriptionBuilder(commid_id);
+
+    if ((resource.description||"").includes(expectedDescription)) {
+        console.log("The version of the resource "+resource.title+" is already sync with this commit! Nothing happens");
+        return Promise.resolve();
+    } else {
+        console.log("The commit referenced in description of resource "+resource.title+" is different from this commit. Description is being updated");
+        return updateDescription(resource, expectedDescription);
+    }
+
 }
 
 function handleFileNotFound(filename: string, commid_id: string) {
@@ -47,14 +82,15 @@ export async function notifyDatagouvChanges(files: string[], commitId: string): 
         return mapped;
     }).then(async (mapped: DatagouvResourceCustom[]) => {
         for (let f of files) {
-
+            console.log("Handling file "+f+"...");
+            
             let foundFile: DatagouvResourceCustom|undefined = 
                 mapped.find((e:DatagouvResourceCustom) => e.title == f);
 
             if (foundFile) {
-                handleFileFound(foundFile, commitId)
+                await handleFileFound(foundFile, commitId)
             } else {
-                handleFileNotFound(f, commitId)
+                await handleFileNotFound(f, commitId)
             }
 
         }
