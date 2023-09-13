@@ -18,7 +18,7 @@ export type DatagouvResourceCustom = {
 }
 
 function descriptionBuilder(commid_id: string): string {
-    return ["commit", "::", commid_id].join("");
+    return ["pr", "::", commid_id].join("");
 }
 
 function updateDescription(resource: DatagouvResourceCustom, description: string): Promise<void>{
@@ -42,13 +42,13 @@ function updateDescription(resource: DatagouvResourceCustom, description: string
     })
 }
 
-function handleFileFound(resource: DatagouvResourceCustom, commid_id: string): Promise<void> {
+function handleFileFound(resource: DatagouvResourceCustom, pr_id: string): Promise<void> {
     console.log("["+resource.title+"] -- File found at"+resource.url);
 
     // TODO: update datagouv resource
 
 
-    let expectedDescription: string = descriptionBuilder(commid_id);
+    let expectedDescription: string = descriptionBuilder(pr_id);
 
     if ((resource.description||"").includes(expectedDescription)) {
         console.log("["+resource.title+"] -- "+"The version of the resource "+resource.title+" is already sync with this commit! Nothing happens");
@@ -60,14 +60,14 @@ function handleFileFound(resource: DatagouvResourceCustom, commid_id: string): P
 
 }
 
-function handleFileNotFound(filename: string, commid_id: string) {
+function handleFileNotFound(filename: string, pr_id: string) {
     console.log("["+filename+"] -- "+"No file found for "+filename);
     // TODO create datagouv resource
     console.log("TODO: Create resource datagouv");
     
 }
 
-export async function notifyDatagouvChanges(files: string[], commitId: string): Promise<void> {
+export async function notifyDatagouvChanges(files: string[], pr_id: string): Promise<void> {
 
     //@ts-ignore
     let datagouvEnv = config.branch[branchName()].datagouv;
@@ -96,9 +96,9 @@ export async function notifyDatagouvChanges(files: string[], commitId: string): 
                 mapped.find((e:DatagouvResourceCustom) => e.title == f);
 
             if (foundFile) {
-                await handleFileFound(foundFile, commitId)
+                await handleFileFound(foundFile, pr_id)
             } else {
-                await handleFileNotFound(f, commitId)
+                await handleFileNotFound(f, pr_id)
             }
 
         }

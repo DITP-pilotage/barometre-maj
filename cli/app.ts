@@ -1,4 +1,4 @@
-import { Command } from 'commander';
+import { Command, Help } from 'commander';
 const program = new Command();
 import {dlDatagouvFiles} from './dl_datagouv_files';
 import { notifyDatagouvChanges } from './notify_datagouv_changes';
@@ -33,7 +33,7 @@ program.command('push-datagouv')
     console.log(log_);
     await notifyDatagouvChanges(log_.updatedFiles, commit_id);
 
-    let gpr = await Helpers.getGitPR(587);
+    let gpr = await Helpers.getUpdatedFilesPR(587);
     console.log(gpr);
     
     
