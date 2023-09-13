@@ -2,61 +2,33 @@ import {config} from './config'
 import fetch from 'node-fetch';
 import 'dotenv/config';
 const branchName = require('current-git-branch');
-import { Datagouv } from './Datagouv';
+import { Datagouv, DatagouvResourceCustom } from './Datagouv';
 
-export type DatagouvResourceCustom = {
-    id: string,
-    created_at: string,
-    last_modified: string,
-    title: string,
-    latest: string,
-    url: string,
-    description: string,
-    format: string
-}
+
 
 function descriptionBuilder(pr_id: number): string {
     return ["pr", "::", pr_id, "::"].join("");
 }
 
-function updateDescription(resource: DatagouvResourceCustom, description: string): Promise<void>{
 
-    //@ts-ignore
-    let datagouvEnv = config.branch[branchName()].datagouv;
-
-
-    return fetch([datagouvEnv.API_BASE_URL, "datasets", datagouvEnv.DATASET, "resources", resource.id].join("/"), {
-        method: "PUT",
-        headers: {
-            'Content-Type': 'application/json',
-            "X-API-KEY": process.env.DEMO_API_KEY!,
-        },
-        body: JSON.stringify({"description": description})
-    }).then(r => r.json())
-    .then((datagouvResponse: any) => {
-        //console.log(datagouvResponse);
-        console.log("["+resource.title+"] -- "+"Description of resource "+datagouvResponse.title+" set to "+datagouvResponse.description);
-        
-    })
-}
 
 function handleFileFound(resource: DatagouvResourceCustom, pr_id: number): Promise<void> {
     console.log("["+resource.title+"] -- File found at "+resource.url);
 
-    // TODO: update datagouv resource
-
-
     let expectedDescription: string = descriptionBuilder(pr_id);
 
     console.log("["+resource.title+"] -- "+"This file is referenced in the PR so the description is being updated...");
-    return updateDescription(resource, expectedDescription);
+    return Datagouv.updateDescription(resource, expectedDescription)
+        .then((datagouvResponse: any) => {
+            //console.log(datagouvResponse);
+            console.log("["+resource.title+"] -- "+"Description of resource "+datagouvResponse.title+" set to "+datagouvResponse.description);
+            
+        })
 
 }
 
 function handleFileNotFound(filename: string, pr_id: number) {
     console.log("["+filename+"] -- "+"No file found for "+filename);
-    // TODO create datagouv resource
-    console.log("TODO: Create resource datagouv");
 
     return Datagouv.createResource(
         // @ts-ignore

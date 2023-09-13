@@ -29,4 +29,31 @@ export class Datagouv {
         .then((r: any) => r.json())
 
     }
+
+    static updateDescription(resource: DatagouvResourceCustom, description: string): Promise<void>{
+
+        //@ts-ignore
+        let datagouvEnv = config.branch[branchName()].datagouv;
+    
+    
+        return fetch([datagouvEnv.API_BASE_URL, "datasets", datagouvEnv.DATASET, "resources", resource.id].join("/"), {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+                "X-API-KEY": process.env.DEMO_API_KEY!,
+            },
+            body: JSON.stringify({"description": description})
+        }).then(r => r.json())
+    }
+}
+
+export type DatagouvResourceCustom = {
+    id: string,
+    created_at: string,
+    last_modified: string,
+    title: string,
+    latest: string,
+    url: string,
+    description: string,
+    format: string
 }
