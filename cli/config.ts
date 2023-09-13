@@ -10,5 +10,6 @@ export const config = {
             API_BASE_URL: "https://demo.data.gouv.fr/api/1"
         }
     },
-    OUT_DIR: './out'
+    OUT_DIR: './out',
+    SOURCE_DIR_TO_UPLOAD: '../updated_datagouv'
 }

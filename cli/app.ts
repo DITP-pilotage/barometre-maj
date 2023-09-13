@@ -1,6 +1,7 @@
 import { Command } from 'commander';
 const program = new Command();
 import {dlDatagouvFiles} from './dl_datagouv_files';
+import { pushDatagouvFiles } from './push_datagouv';
 
 program
   .name('barometre-maj')
@@ -14,6 +15,18 @@ program.command('dl-datagouv')
     console.log({opts});
     
     await dlDatagouvFiles(opts.destination);
+
+  });
+
+
+program.command('push-datagouv')
+  .description('Met à jour les resources du jeu de données datagouv')
+  .argument('<commit-id>', "Commit du fichier mis à jour")
+  .option('-d, --directory <path>', 'source directory')
+  .action(async (commit_id:string, opts:{directory: string}) => {
+    console.log({opts});
+    
+    await pushDatagouvFiles(opts.directory, commit_id);
 
   });
 
