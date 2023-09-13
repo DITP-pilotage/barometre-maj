@@ -31,33 +31,36 @@ function updateDescription(resource: DatagouvResourceCustom, description: string
         },
         body: JSON.stringify({"description": description})
     }).then(r => r.json())
-    .then((r: any) => {
-        console.log(r);
-        console.log("New description of resource "+r.title+" set to "+r.description);
+    .then((datagouvResponse: any) => {
+        //console.log(datagouvResponse);
+        console.log("["+resource.title+"] -- "+"New description of resource "+datagouvResponse.title+" set to "+datagouvResponse.description);
         
     })
 }
 
 function handleFileFound(resource: DatagouvResourceCustom, commid_id: string): Promise<void> {
-    console.log("File found at "+resource.url)
+    console.log("["+resource.title+"] -- File found at"+resource.url);
+
     // TODO: update datagouv resource
 
 
     let expectedDescription: string = descriptionBuilder(commid_id);
 
     if ((resource.description||"").includes(expectedDescription)) {
-        console.log("The version of the resource "+resource.title+" is already sync with this commit! Nothing happens");
+        console.log("["+resource.title+"] -- "+"The version of the resource "+resource.title+" is already sync with this commit! Nothing happens");
         return Promise.resolve();
     } else {
-        console.log("The commit referenced in description of resource "+resource.title+" is different from this commit. Description is being updated");
+        console.log("["+resource.title+"] -- "+"The commit referenced in description of resource "+resource.title+" is different from this commit. Description is being updated...");
         return updateDescription(resource, expectedDescription);
     }
 
 }
 
 function handleFileNotFound(filename: string, commid_id: string) {
-    console.log("No file found for "+filename);
+    console.log("["+filename+"] -- "+"No file found for "+filename);
     // TODO create datagouv resource
+    console.log("TODO: Create resource datagouv");
+    
 }
 
 export async function notifyDatagouvChanges(files: string[], commitId: string): Promise<void> {
@@ -82,7 +85,7 @@ export async function notifyDatagouvChanges(files: string[], commitId: string): 
         return mapped;
     }).then(async (mapped: DatagouvResourceCustom[]) => {
         for (let f of files) {
-            console.log("Handling file "+f+"...");
+            console.log("["+f+"] -- Start processing"+"...");
             
             let foundFile: DatagouvResourceCustom|undefined = 
                 mapped.find((e:DatagouvResourceCustom) => e.title == f);
@@ -94,6 +97,6 @@ export async function notifyDatagouvChanges(files: string[], commitId: string): 
             }
 
         }
-        console.log("Files updated from ");
+        console.log("Files updated: ", JSON.stringify(files));
     })
 }
