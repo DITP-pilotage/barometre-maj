@@ -39,26 +39,21 @@ function updateDescription(resource: DatagouvResourceCustom, description: string
     }).then(r => r.json())
     .then((datagouvResponse: any) => {
         //console.log(datagouvResponse);
-        console.log("["+resource.title+"] -- "+"New description of resource "+datagouvResponse.title+" set to "+datagouvResponse.description);
+        console.log("["+resource.title+"] -- "+"Description of resource "+datagouvResponse.title+" set to "+datagouvResponse.description);
         
     })
 }
 
 function handleFileFound(resource: DatagouvResourceCustom, pr_id: number): Promise<void> {
-    console.log("["+resource.title+"] -- File found at"+resource.url);
+    console.log("["+resource.title+"] -- File found at "+resource.url);
 
     // TODO: update datagouv resource
 
 
     let expectedDescription: string = descriptionBuilder(pr_id);
 
-    if ((resource.description||"").includes(expectedDescription)) {
-        console.log("["+resource.title+"] -- "+"The version of the resource "+resource.title+" is already sync with this commit! Nothing happens");
-        return Promise.resolve();
-    } else {
-        console.log("["+resource.title+"] -- "+"The commit referenced in description of resource "+resource.title+" is different from this commit. Description is being updated...");
-        return updateDescription(resource, expectedDescription);
-    }
+    console.log("["+resource.title+"] -- "+"This file is referenced in the PR so the description is being updated...");
+    return updateDescription(resource, expectedDescription);
 
 }
 
