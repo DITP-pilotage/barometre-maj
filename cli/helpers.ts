@@ -1,3 +1,5 @@
+import { config } from "./config";
+
 export class Helpers {
     static getDatasetMetadata(baseUrl: string, datasetId: string|undefined) {
         return fetch([baseUrl, 'datasets', datasetId].join('/'), {
@@ -30,12 +32,13 @@ export class Helpers {
         })
     }
 
-    static getUpdatedFilesPR(pr_id: number): Promise<string[]> {
+    static getUpdatedFilesPR(pr_id: number, starts_with: string= ""): Promise<string[]> {
         return this.getGitPR(pr_id)
             .then((r: {filename: string}[]) => {
-                return r.map((e: {filename: string}) => {
-                    return e.filename.split('/').pop()!;
-                })
+                return r.filter((e: {filename: string}) => e.filename.startsWith(starts_with))
+                    .map((e: {filename: string}) => {
+                        return e.filename.split('/').pop()!;
+                    })
             })
     }
 }

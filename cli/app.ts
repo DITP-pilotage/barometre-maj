@@ -3,6 +3,7 @@ const program = new Command();
 import {dlDatagouvFiles} from './dl_datagouv_files';
 import { notifyDatagouvChanges } from './notify_datagouv_changes';
 import { Helpers } from './helpers';
+import { config } from './config';
 
 program
   .name('barometre-maj')
@@ -27,7 +28,7 @@ program.command('push-datagouv')
   .action(async (pr_id: number, opts:{directory: string}) => {
     console.log({opts});
     
-    let gpr = await Helpers.getUpdatedFilesPR(pr_id);
+    let gpr = await Helpers.getUpdatedFilesPR(pr_id, config.SOURCE_DIR_TO_UPLOAD_REPO);
     console.log(gpr);
     
     await notifyDatagouvChanges(gpr, pr_id);
