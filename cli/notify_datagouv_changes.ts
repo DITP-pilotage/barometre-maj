@@ -1,6 +1,8 @@
 import {config} from './config'
 import fetch from 'node-fetch';
 import 'dotenv/config';
+const branchName = require('current-git-branch');
+
 
 import { Helpers } from './helpers';
 
@@ -21,9 +23,11 @@ function descriptionBuilder(commid_id: string): string {
 
 function updateDescription(resource: DatagouvResourceCustom, description: string): Promise<void>{
 
-    let datagouvEnv = config.datagouv.test;
+    //@ts-ignore
+    let datagouvEnv = config.branch[branchName()].datagouv;
 
-    return fetch([datagouvEnv.API_BASE_URL, "datasets", process.env.DATASET_TEST, "resources", resource.id].join("/"), {
+
+    return fetch([datagouvEnv.API_BASE_URL, "datasets", datagouvEnv.DATASET, "resources", resource.id].join("/"), {
         method: "PUT",
         headers: {
             'Content-Type': 'application/json',
@@ -65,12 +69,13 @@ function handleFileNotFound(filename: string, commid_id: string) {
 
 export async function notifyDatagouvChanges(files: string[], commitId: string): Promise<void> {
 
-    const datagouvEnv = config.datagouv.test;
+    //@ts-ignore
+    let datagouvEnv = config.branch[branchName()].datagouv;
 
     
-    return Helpers.getDatasetMetadata(datagouvEnv.API_BASE_URL, process.env.DATASET_TEST)
+    return Helpers.getDatasetMetadata(datagouvEnv.API_BASE_URL, datagouvEnv.DATASET)
         .then((r: any) => {
-            
+        
         let mapped : DatagouvResourceCustom[] = r.resources.map((e: any) => ({
             id: e.id,
             created_at: e.created_at,

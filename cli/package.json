@@ -4,6 +4,7 @@
   },
   "dependencies": {
     "commander": "^11.0.0",
+    "current-git-branch": "^1.1.0",
     "dotenv": "^16.3.1",
     "fs.promises": "^0.1.2",
     "gitlog": "^4.0.8",
@@ -14,6 +15,7 @@
   },
   "devDependencies": {
     "@inquirer/prompts": "^3.1.1",
+    "@types/current-git-branch": "^1.1.4",
     "@types/inquirer": "^9.0.3",
     "@types/node": "^20.6.0",
     "@types/node-fetch": "^2.6.4"

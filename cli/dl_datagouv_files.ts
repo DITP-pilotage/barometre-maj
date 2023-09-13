@@ -27,11 +27,11 @@ function dl(url: string, outfile: string) {
 
 export async function dlDatagouvFiles(dest: string= config.OUT_DIR): Promise<void> {
 
-    const datagouvEnv = config.datagouv.demo;
-    config.datagouv.demo.API_BASE_URL
+    //@ts-ignore
+    const datagouvEnv = config.branch[branchName()].datagouv;
 
-    
-    return Helpers.getDatasetMetadata(datagouvEnv.API_BASE_URL, process.env.DATASET_DEMO)
+
+    return Helpers.getDatasetMetadata(datagouvEnv.datagouv.API_BASE_URL, datagouvEnv.datagouv.DATASET)
         .then((r: any) => {
         let mapped : any[] = r.resources.map((e: any) => ({
             id: e.id,
