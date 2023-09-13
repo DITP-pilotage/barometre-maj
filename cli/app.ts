@@ -28,10 +28,10 @@ program.command('push-datagouv')
   .action(async (pr_id: number, opts:{directory: string}) => {
     console.log({opts});
     
-    let gpr = await Helpers.getUpdatedFilesPR(pr_id, config.SOURCE_DIR_TO_UPLOAD_REPO);
-    console.log(gpr);
+    let modifiedFilesInPR: string[] = await Helpers.getUpdatedFilesPR(pr_id, config.SOURCE_DIR_TO_UPLOAD_REPO);
+    console.log({modifiedFilesInPR});
     
-    await notifyDatagouvChanges(gpr, pr_id);
+    await notifyDatagouvChanges(modifiedFilesInPR, pr_id);
     
   });
 

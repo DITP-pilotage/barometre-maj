@@ -86,7 +86,7 @@ export async function notifyDatagouvChanges(files: string[], pr_id: number): Pro
             description: e.description,
             format: e.format
         }));
-        console.log(mapped.slice(0,2));
+        //console.log(mapped.slice(0,2));
         return mapped;
     }).then(async (mapped: DatagouvResourceCustom[]) => {
         for (let f of files) {
