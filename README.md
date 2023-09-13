@@ -5,23 +5,25 @@ Processus de mise à jour des fichiers sources du [baromètre de l'action publiq
 
 ## Usage
 
-Les étapes pour mettre à jour les données:
-- new branch *data-update* from *pre-prod*
-- update files
-- pr from *data-update* to *pre-prod*
-- merge pr
-- download pr results from github API
-- verify resource exists in datagouv dataset **for each updated files in PR**:
-    + if yes: update their date/descricption (commit, pr)
-    + else: create resource
-    + delete resources with no associated file in the repo
-    + comment in PR the log results of the verify step
-- check pre-prod results
-- pr from *pre-prod* to *prod*
-- merge pr
-- verify
-- check prod results
-- delete branch *data-update*
-
-branches: prod (datagouv), pre-prod (demo datagouv), data-update (no remote data fs)
-
+Pour mettre à jour les données, suivre les étapes suivantes:
+- Télécharger les fichiers de datagouv dans `data/current_datagouv` et `data/updated_datagouv`. Normalement, aucun fichier ne doit être modifié dans le dossier `data/updated_datagouv`.
+```sh
+npm run start -- dl-datagouv -d ../data/current_datagouv
+```
+- Créer une branche *data-update* depuis la branche *pre-prod* (ou *test* durant le développement de l'application)
+- Mettre à jour les fichiers 
+- Créer sur Github une *pull request* depuis *data-update* vers *pre-prod* (ou *test*)
+- Merger la *PR*
+- Lancer la synchronisation de datagouv avec la numéro de la PR en paramètre. Cette commande effectue les taches suivantes:
+```sh
+npm run start -- push-datagouv 24
+```
+    + pour chaque fichier de données (par défaut, dossier `data/updated_datagouv`), sa description sera mise à jour avec le numéro de la PR en cours, et sa date de mise à jour également
+    + si aucune *resource datagouv* ne porte le nom du fichier, une resource sera créée pointant cers ce fichier (avec le numéro de *PR* en description)
+    + *TODO* Supprimer les *resources datagouv* qui n'ont pas de fichier en local
+    + *TODO* Ajouter un commentaire dans la PR pour indiquer quels modifications ont été apportées sur datagouv lors de cette phase automatisée
+- Regarder l'effet produit sur l'instance pre-prod du baromètre
+- Créer puis merger une PR de *pre-prod* vers *prod*
+- Lancer de nouveau la synchronisation sur cette branche. En effet, les *resources* créée lors du passage du script sur la branche *pre-prod* est un *dataset Datagouv* différent de celui de prod. Il faut donc synchroniser ce *dataset* également.
+- Regarder l'effet produit sur l'instance prod du baromètre
+- Supprimer la branche *data-update*
