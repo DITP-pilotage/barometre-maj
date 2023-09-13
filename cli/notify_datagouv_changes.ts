@@ -2,30 +2,10 @@ import {config} from './config'
 import fetch from 'node-fetch';
 import 'dotenv/config';
 
-import * as https from 'https'
-import * as fs from 'fs'
 import { Helpers } from './helpers';
 
-function upload(url: string, outfile: string) {
 
-    return new Promise((resolve, reject) => {
-
-        const file = fs.createWriteStream(outfile);
-        https.get(url, function(response: any) {
-           response.pipe(file);
-        
-           // after download completed close filestream
-           file.on("finish", () => {
-               file.close();
-               console.log("File downloaded at "+outfile);
-               resolve(outfile);
-           });
-        });
-    })
-    
-}
-
-export async function notifyDatagouvChanges(source: string= config.OUT_DIR, commitId: string): Promise<void> {
+export async function notifyDatagouvChanges(files: string[], commitId: string): Promise<void> {
 
     const datagouvEnv = config.datagouv.test;
 
@@ -46,9 +26,19 @@ export async function notifyDatagouvChanges(source: string= config.OUT_DIR, comm
         console.log(mapped.slice(0,2));
         return mapped;
     }).then(async (mapped: any) => {
-        for (let resource of mapped) {
+        for (let f of files) {
+
+            let onlineFile: any = mapped.find((e:any) => e.title == f);
+
+
+
+
+            if (onlineFile) console.log("File found at "+onlineFile.url)
+            else console.log("No file found for "+f);
+            
+            
             //await dl(resource.url, [dest,resource.title].join("/"))
         }
-        console.log("Files uploaded from "+source);
+        console.log("Files updated from ");
     })
 }

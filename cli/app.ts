@@ -2,7 +2,7 @@ import { Command } from 'commander';
 const program = new Command();
 import {dlDatagouvFiles} from './dl_datagouv_files';
 import { notifyDatagouvChanges } from './notify_datagouv_changes';
-import { GitLog } from './gitlog';
+import { GitCommit, GitLog } from './gitlog';
 
 program
   .name('barometre-maj')
@@ -27,9 +27,11 @@ program.command('push-datagouv')
   .action(async (commit_id:string, opts:{directory: string}) => {
     console.log({opts});
     
-    //await pushDatagouvFiles(opts.directory, commit_id);
-    let l=GitLog.getLog(commit_id);
-    console.log(l);
+    let log_: {gitLog: GitCommit, updatedFiles: string[]} = GitLog.getLog(commit_id);
+    
+    console.log(log_);
+    await notifyDatagouvChanges(log_.updatedFiles, commit_id);
+
     
   });
 
