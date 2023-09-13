@@ -1,3 +1,6 @@
+import {config} from './config'
+const branchName = require('current-git-branch');
+
 export class Datagouv {
     static getDatasetMetadata(baseUrl: string, datasetId: string|undefined) {
         return fetch([baseUrl, 'datasets', datasetId].join('/'), {
