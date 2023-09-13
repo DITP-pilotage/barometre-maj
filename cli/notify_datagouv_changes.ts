@@ -17,8 +17,8 @@ export type DatagouvResourceCustom = {
     format: string
 }
 
-function descriptionBuilder(commid_id: string): string {
-    return ["pr", "::", commid_id].join("");
+function descriptionBuilder(pr_id: number): string {
+    return ["pr", "::", pr_id, "::"].join("");
 }
 
 function updateDescription(resource: DatagouvResourceCustom, description: string): Promise<void>{
@@ -42,7 +42,7 @@ function updateDescription(resource: DatagouvResourceCustom, description: string
     })
 }
 
-function handleFileFound(resource: DatagouvResourceCustom, pr_id: string): Promise<void> {
+function handleFileFound(resource: DatagouvResourceCustom, pr_id: number): Promise<void> {
     console.log("["+resource.title+"] -- File found at"+resource.url);
 
     // TODO: update datagouv resource
@@ -60,14 +60,14 @@ function handleFileFound(resource: DatagouvResourceCustom, pr_id: string): Promi
 
 }
 
-function handleFileNotFound(filename: string, pr_id: string) {
+function handleFileNotFound(filename: string, pr_id: number) {
     console.log("["+filename+"] -- "+"No file found for "+filename);
     // TODO create datagouv resource
     console.log("TODO: Create resource datagouv");
     
 }
 
-export async function notifyDatagouvChanges(files: string[], pr_id: string): Promise<void> {
+export async function notifyDatagouvChanges(files: string[], pr_id: number): Promise<void> {
 
     //@ts-ignore
     let datagouvEnv = config.branch[branchName()].datagouv;
