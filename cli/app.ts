@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 const program = new Command();
 import {dlDatagouvFiles} from './dl_datagouv_files';
-import { pushDatagouvFiles } from './push_datagouv';
+import { notifyDatagouvChanges } from './notify_datagouv_changes';
 import { GitLog } from './gitlog';
 
 program

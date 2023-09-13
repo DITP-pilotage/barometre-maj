@@ -25,13 +25,14 @@ function upload(url: string, outfile: string) {
     
 }
 
-export async function pushDatagouvFiles(source: string= config.OUT_DIR, commitId: string): Promise<void> {
+export async function notifyDatagouvChanges(source: string= config.OUT_DIR, commitId: string): Promise<void> {
 
     const datagouvEnv = config.datagouv.test;
 
     
     return Helpers.getDatasetMetadata(datagouvEnv.API_BASE_URL, process.env.DATASET_TEST)
         .then((r: any) => {
+            
         let mapped : any[] = r.resources.map((e: any) => ({
             id: e.id,
             created_at: e.created_at,
@@ -42,7 +43,7 @@ export async function pushDatagouvFiles(source: string= config.OUT_DIR, commitId
             description: e.description,
             format: e.format
         }));
-        console.log(mapped.slice(1,3));
+        console.log(mapped.slice(0,2));
         return mapped;
     }).then(async (mapped: any) => {
         for (let resource of mapped) {
