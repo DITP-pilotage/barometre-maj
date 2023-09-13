@@ -3,6 +3,7 @@ const program = new Command();
 import {dlDatagouvFiles} from './dl_datagouv_files';
 import { notifyDatagouvChanges } from './notify_datagouv_changes';
 import { GitCommit, GitLog } from './gitlog';
+import { Helpers } from './helpers';
 
 program
   .name('barometre-maj')
@@ -32,6 +33,9 @@ program.command('push-datagouv')
     console.log(log_);
     await notifyDatagouvChanges(log_.updatedFiles, commit_id);
 
+    let gpr = await Helpers.getGitPR(587);
+    console.log(gpr);
+    
     
   });
 
