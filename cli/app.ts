@@ -22,11 +22,11 @@ program.command('dl-datagouv')
 
 program.command('push-datagouv')
   .description('Met à jour les resources du jeu de données datagouv')
+  .argument('<pr-id>', 'Identifiant de la PR à inspecter')
   .option('-d, --directory <path>', 'source directory')
-  .action(async (opts:{directory: string}) => {
+  .action(async (pr_id: number, opts:{directory: string}) => {
     console.log({opts});
     
-    const pr_id: number= 1;
     let gpr = await Helpers.getUpdatedFilesPR(pr_id);
     console.log(gpr);
     
