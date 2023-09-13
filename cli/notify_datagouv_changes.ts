@@ -5,6 +5,8 @@ const branchName = require('current-git-branch');
 
 
 import { Helpers } from './helpers';
+import { title } from 'process';
+import { url } from 'inspector';
 
 export type DatagouvResourceCustom = {
     id: string,
@@ -64,6 +66,30 @@ function handleFileNotFound(filename: string, pr_id: number) {
     console.log("["+filename+"] -- "+"No file found for "+filename);
     // TODO create datagouv resource
     console.log("TODO: Create resource datagouv");
+
+    return Helpers.DatagouvCreateResource(
+        // @ts-ignore
+        config.branch[branchName()].datagouv.API_BASE_URL,
+        //@ts-ignore
+        config.branch[branchName()].datagouv.DATASET,
+        filename,
+        descriptionBuilder(pr_id),
+        [config.GH_RAW_BASE_URL, config.GH_USER, config.GH_REPO, branchName(), config.SOURCE_DIR_TO_UPLOAD_REPO, filename].join("/")
+        )
+    .then((datagouvResourceCreated: DatagouvResourceCustom) => {
+        let datagouvResourceCreatedClean: DatagouvResourceCustom= {
+            id: datagouvResourceCreated.id,
+            title: datagouvResourceCreated.title,
+            description: datagouvResourceCreated.description,
+            url: datagouvResourceCreated.url,
+            format: datagouvResourceCreated.format,
+            created_at: datagouvResourceCreated.created_at,
+            last_modified: datagouvResourceCreated.last_modified,
+            latest: datagouvResourceCreated.latest
+        }
+        console.log("["+filename+"] -- "+"Resource created: "+JSON.stringify(datagouvResourceCreatedClean));
+
+    })
     
 }
 

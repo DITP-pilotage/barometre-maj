@@ -10,8 +10,8 @@ export class Helpers {
 
     static getGitPR(pr_id: number): Promise<any[]>{
         const gh_api_base_url: string= "https://api.github.com";
-        const gh_user = "DITP-pilotage";
-        const gh_repo = "barometre-maj";
+        const gh_user = config.GH_USER;
+        const gh_repo = config.GH_REPO;
 
         return fetch([gh_api_base_url, "repos", gh_user, gh_repo, "pulls" , pr_id, "files"].join('/'), {
             "method": "GET",
@@ -40,5 +40,29 @@ export class Helpers {
                         return e.filename.split('/').pop()!;
                     })
             })
+    }
+
+    static DatagouvCreateResource(baseUrl: string, datasetId: string, title:string, description:string, url:string) {
+
+        const payload = {
+                "description": description,
+                "filetype": "remote",
+                "format": "csv",
+                "mime": "text/csv",
+                "title": title,
+                "type": "main",
+                "url": url
+        }
+
+        return fetch([baseUrl, 'datasets', datasetId, 'resources'].join('/'), {
+            "method": "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "X-API-KEY": process.env.DEMO_API_KEY!,
+            },
+            body: JSON.stringify(payload)
+        })
+        .then((r: any) => r.json())
+
     }
 }
