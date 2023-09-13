@@ -4,6 +4,7 @@ import 'dotenv/config';
 
 import * as https from 'https'
 import * as fs from 'fs'
+import { Helpers } from './helpers';
 
 function dl(url: string, outfile: string) {
 
@@ -29,11 +30,9 @@ export async function dlDatagouvFiles(dest: string= config.OUT_DIR): Promise<voi
     const datagouvEnv = config.datagouv.demo;
     config.datagouv.demo.API_BASE_URL
 
-    return fetch([datagouvEnv.API_BASE_URL, 'datasets', process.env.DATASET_DEMO].join('/'), {
-        "method": "GET"
-    })
-    .then((r: any) => r.json())
-    .then((r: any) => {
+    
+    return Helpers.getDatasetMetadata(datagouvEnv.API_BASE_URL, process.env.DATASET_DEMO)
+        .then((r: any) => {
         let mapped : any[] = r.resources.map((e: any) => ({
             id: e.id,
             created_at: e.created_at,
