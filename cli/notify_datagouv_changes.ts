@@ -2,11 +2,7 @@ import {config} from './config'
 import fetch from 'node-fetch';
 import 'dotenv/config';
 const branchName = require('current-git-branch');
-
-
-import { Helpers } from './helpers';
-import { title } from 'process';
-import { url } from 'inspector';
+import { Datagouv } from './Datagouv';
 
 export type DatagouvResourceCustom = {
     id: string,
@@ -62,7 +58,7 @@ function handleFileNotFound(filename: string, pr_id: number) {
     // TODO create datagouv resource
     console.log("TODO: Create resource datagouv");
 
-    return Helpers.DatagouvCreateResource(
+    return Datagouv.createResource(
         // @ts-ignore
         config.branch[branchName()].datagouv.API_BASE_URL,
         //@ts-ignore
@@ -94,7 +90,7 @@ export async function notifyDatagouvChanges(files: string[], pr_id: number): Pro
     let datagouvEnv = config.branch[branchName()].datagouv;
 
     
-    return Helpers.getDatasetMetadata(datagouvEnv.API_BASE_URL, datagouvEnv.DATASET)
+    return Datagouv.getDatasetMetadata(datagouvEnv.API_BASE_URL, datagouvEnv.DATASET)
         .then((r: any) => {
         
         let mapped : DatagouvResourceCustom[] = r.resources.map((e: any) => ({

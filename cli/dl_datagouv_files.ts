@@ -1,10 +1,9 @@
 import {config} from './config'
-import fetch from 'node-fetch';
 import 'dotenv/config';
 
 import * as https from 'https'
 import * as fs from 'fs'
-import { Helpers } from './helpers';
+import { Datagouv } from './Datagouv';
 
 function dl(url: string, outfile: string) {
 
@@ -31,7 +30,7 @@ export async function dlDatagouvFiles(dest: string= config.OUT_DIR): Promise<voi
     const datagouvEnv = config.branch[branchName()].datagouv;
 
 
-    return Helpers.getDatasetMetadata(datagouvEnv.datagouv.API_BASE_URL, datagouvEnv.datagouv.DATASET)
+    return Datagouv.getDatasetMetadata(datagouvEnv.datagouv.API_BASE_URL, datagouvEnv.datagouv.DATASET)
         .then((r: any) => {
         let mapped : any[] = r.resources.map((e: any) => ({
             id: e.id,

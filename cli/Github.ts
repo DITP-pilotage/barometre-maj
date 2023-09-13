@@ -1,14 +1,8 @@
 import { config } from "./config";
 
-export class Helpers {
-    static getDatasetMetadata(baseUrl: string, datasetId: string|undefined) {
-        return fetch([baseUrl, 'datasets', datasetId].join('/'), {
-            "method": "GET"
-        })
-        .then((r: any) => r.json())
-    }
+export class Github {
 
-    static getGitPR(pr_id: number): Promise<any[]>{
+    static getPR(pr_id: number): Promise<any[]>{
         const gh_api_base_url: string= "https://api.github.com";
         const gh_user = config.GH_USER;
         const gh_repo = config.GH_REPO;
@@ -33,7 +27,7 @@ export class Helpers {
     }
 
     static getUpdatedFilesPR(pr_id: number, starts_with: string= ""): Promise<string[]> {
-        return this.getGitPR(pr_id)
+        return this.getPR(pr_id)
             .then((r: {filename: string}[]) => {
                 return r.filter((e: {filename: string}) => e.filename.startsWith(starts_with))
                     .map((e: {filename: string}) => {
@@ -42,27 +36,5 @@ export class Helpers {
             })
     }
 
-    static DatagouvCreateResource(baseUrl: string, datasetId: string, title:string, description:string, url:string) {
-
-        const payload = {
-                "description": description,
-                "filetype": "remote",
-                "format": "csv",
-                "mime": "text/csv",
-                "title": title,
-                "type": "main",
-                "url": url
-        }
-
-        return fetch([baseUrl, 'datasets', datasetId, 'resources'].join('/'), {
-            "method": "POST",
-            headers: {
-                'Content-Type': 'application/json',
-                "X-API-KEY": process.env.DEMO_API_KEY!,
-            },
-            body: JSON.stringify(payload)
-        })
-        .then((r: any) => r.json())
-
-    }
+    
 }
