@@ -7,7 +7,8 @@ import { Datagouv, DatagouvResourceCustom } from './Datagouv';
 
 
 function descriptionBuilder(pr_id: number): string {
-    return ["pr", "::", pr_id, "::"].join("");
+    const url_pr: string = [config.GH_BASE_URL, config.GH_USER, config.GH_REPO, "pull", pr_id].join("/")
+    return ["Modifié dernièrement dans ", url_pr].join("")
 }
 
 

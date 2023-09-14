@@ -4,6 +4,7 @@ export const config = {
     OUT_DIR: './out',
     SOURCE_DIR_TO_UPLOAD_RELATIVE: '../datagouv_3_updated',
     SOURCE_DIR_TO_UPLOAD_REPO: 'data/datagouv_3_updated',
+    GH_BASE_URL: "https://github.com",
     GH_RAW_BASE_URL: "https://raw.githubusercontent.com",
     GH_REPO: "barometre-maj",
     GH_USER: "DITP-pilotage",
