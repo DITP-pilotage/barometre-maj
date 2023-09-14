@@ -1,0 +1,6 @@
+indic_id,enforce_zone_id,metric_enforce_date,indic_vi,indic_va,indic_vc,maille,indic_ta
+IND-307,FRANCE,2022-12-31,108644,108644,,NAT,0
+IND-307,FRANCE,2023-12-31,,,270000,NAT,
+IND-307,FRANCE,2024-12-31,,,350000,NAT,
+IND-307,FRANCE,2025-12-31,,,430000,NAT,
+IND-307,FRANCE,2026-12-31,,,520000,NAT,
