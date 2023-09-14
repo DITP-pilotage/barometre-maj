@@ -10,9 +10,9 @@ library(stringr)
 #' @examples
 split_in_files <- function(indic_data) {
   OUT_DIR <- '../data/datagouv_3_updated/'
-  data_hist_splitted <- split(data_hist, data_hist$indic_id)
+  data_splitted <- split(indic_data, indic_data$indic_id)
   
-  written_rows_cnt <- lapply(data_hist_splitted, function(df_indic){
+  written_rows_cnt <- lapply(data_splitted, function(df_indic){
     current_indic <- as.character(unique(df_indic[["indic_id"]]))
     outfile <- paste0(OUT_DIR, tolower(current_indic), ".csv")
     nb_rows <- nrow(df_indic)
