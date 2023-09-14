@@ -1,6 +1,8 @@
-source('R/load_hist_data.R')
+source('R/load_data.R')
 
-hist_data <- loadHistData()
+data_hist <- load_data_hist()
 
-hist_data %>%
-  head()
+data_pilote <- load_data_pilote()
+
+data_hist %>% head()
+data_pilote %>% head()
