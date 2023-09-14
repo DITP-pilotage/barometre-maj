@@ -8,7 +8,7 @@ Processus de mise à jour des fichiers sources du [baromètre de l'action publiq
 Pour mettre à jour les données, suivre les étapes suivantes:
 - Télécharger les fichiers de datagouv dans `data/current_datagouv` et `data/updated_datagouv`. Normalement, aucun fichier ne doit être modifié dans le dossier `data/updated_datagouv`.
 ```sh
-npm run start -- dl-datagouv -d ../data/current_datagouv
+npm run start -- dl-datagouv -d ../data/datagouv_2_current
 ```
 - Créer une branche *data-update* depuis la branche *pre-prod* (ou *test* durant le développement de l'application)
 - Mettre à jour les fichiers
