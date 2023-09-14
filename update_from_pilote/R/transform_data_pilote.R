@@ -72,6 +72,8 @@ transform_data_pilote <- function(data_pilote_) {
       indic_id=id, maille = maille.x, code_insee = code_insee.x, va=unnest_va, metric_enforce_date=unnest_va_dates
     ) %>% mutate(va = as.numeric(va))
   
+  terr<-read_csv("../data/ref/territoire.csv", show_col_types = FALSE)
+  
   transformed_data_pilote <-
     extracted_vi %>%
     full_join(extracted_vc1, by=c("indic_id", "metric_enforce_date", "maille", "code_insee")) %>%
@@ -79,13 +81,16 @@ transform_data_pilote <- function(data_pilote_) {
     full_join(extracted_va, by=c("indic_id", "metric_enforce_date", "maille", "code_insee")) %>%
     full_join(extracted_ta1, by=c("indic_id", "metric_enforce_date", "maille", "code_insee")) %>%
     full_join(extracted_ta2, by=c("indic_id", "metric_enforce_date", "maille", "code_insee")) %>%
+    filter(
+      !(is.na(vi) & is.na(va) & is.na(vc_inter) & is.na(vc_glob) & is.na(ta_inter) & is.na(ta_glob))
+    ) %>% 
+    mutate(zone_code=paste0(maille,"-",code_insee)) %>% 
+    # Get correct zone_id
+    left_join((terr %>% select(code, zone_id)), by=c("zone_code"="code")) %>%
     select(
-      indic_id, code_insee, metric_enforce_date, 
+      indic_id, enforce_zone_id=zone_id, metric_enforce_date, 
       indic_vi=vi, indic_va=va, indic_vc_inter=vc_inter, indic_vc_glob=vc_glob,
       maille, indic_ta_inter= ta_inter, indic_ta_glob= ta_glob
-    ) %>% 
-    filter(
-      !(is.na(indic_vi) & is.na(indic_va) & is.na(indic_vc_inter) & is.na(indic_vc_glob) & is.na(indic_ta_inter) & is.na(indic_ta_glob))
     )
   
   transformed_data_pilote
