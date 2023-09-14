@@ -9,6 +9,10 @@ export class Datagouv {
         .then((r: any) => r.json())
     }
 
+    static BuilderResourceUrl(filename: string): string {
+        return [config.GH_RAW_BASE_URL, config.GH_USER, config.GH_REPO, branchName(), config.SOURCE_DIR_TO_UPLOAD_REPO, filename].join("/")
+    }
+
     static createResource(baseUrl: string, datasetId: string, title:string, description:string, url:string) {
 
         const payload = {
@@ -33,7 +37,13 @@ export class Datagouv {
 
     }
 
-    static updateDescription(resource: DatagouvResourceCustom, description: string): Promise<void>{
+    /**
+     * Update a Datagouv resource
+     * @param resource Resource to update 
+     * @param payload Fields to update. Some of {description?, title?, url?}
+     * @returns Datagouv response
+     */
+    static updateResource(resource: DatagouvResourceCustom, payload: {description?: string, title?: string, url?: string}): Promise<void>{
 
         //@ts-ignore
         let datagouvEnv = config.branch[branchName()].datagouv;
@@ -45,8 +55,12 @@ export class Datagouv {
                 'Content-Type': 'application/json',
                 "X-API-KEY": process.env.DEMO_API_KEY!,
             },
-            body: JSON.stringify({"description": description})
+            body: JSON.stringify(payload)
         }).then(r => r.json())
+    }
+
+    static updateResourceDescription(resource: DatagouvResourceCustom, description: string): Promise<void>{
+        return this.updateResource(resource, {description});
     }
 }
 

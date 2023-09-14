@@ -15,14 +15,26 @@ function descriptionBuilder(pr_id: number): string {
 function handleFileFound(resource: DatagouvResourceCustom, pr_id: number): Promise<void> {
     console.log("["+resource.title+"] -- File found at "+resource.url);
 
-    let expectedDescription: string = descriptionBuilder(pr_id);
+    let updatePayload: any = {};
+
 
     console.log("["+resource.title+"] -- "+"This file is referenced in the PR so the description is being updated...");
-    return Datagouv.updateDescription(resource, expectedDescription)
+    let expectedDescription: string = descriptionBuilder(pr_id);
+    updatePayload.description = expectedDescription;
+
+    let expectedUrl: string = Datagouv.BuilderResourceUrl(resource.title);
+
+    if (resource.url != expectedUrl) {
+        console.warn("["+resource.title+"] -- "+"Url of resource is incorrect so the url is being updated... Current url: "+resource.url);
+        updatePayload.url = expectedUrl;
+    }
+    return Datagouv.updateResource(resource, updatePayload)
         .then((datagouvResponse: any) => {
             //console.log(datagouvResponse);
             console.log("["+resource.title+"] -- "+"Description of resource "+datagouvResponse.title+" set to "+datagouvResponse.description);
-            
+            if (resource.url != expectedUrl) {
+                console.log("["+resource.title+"] -- "+"Url of resource "+datagouvResponse.title+" set to "+datagouvResponse.url);
+            }
         })
 
 }
@@ -37,7 +49,7 @@ function handleFileNotFound(filename: string, pr_id: number) {
         config.branch[branchName()].datagouv.DATASET,
         filename,
         descriptionBuilder(pr_id),
-        [config.GH_RAW_BASE_URL, config.GH_USER, config.GH_REPO, branchName(), config.SOURCE_DIR_TO_UPLOAD_REPO, filename].join("/")
+        Datagouv.BuilderResourceUrl(filename)
         )
     .then((datagouvResourceCreated: DatagouvResourceCustom) => {
         let datagouvResourceCreatedClean: DatagouvResourceCustom= {
