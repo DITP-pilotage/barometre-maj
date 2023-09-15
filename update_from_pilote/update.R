@@ -25,3 +25,5 @@ r%>%filter(indic_id=="IND-263" & enforce_zone_id=="D10" & metric_enforce_date=="
 ## on multiple columns: 
 r %>% count(indic_id, enforce_zone_id, metric_enforce_date) %>% arrange(-n) %>% filter(n>1)
 r%>%filter(indic_id=="IND-200" & enforce_zone_id=="R01" & metric_enforce_date=="2022-05-31")
+
+data_hist %>% filter(indic_id=="IND-263", enforce_zone_id=="D01", metric_enforce_date=="2022-12-31", indic_va==523)
