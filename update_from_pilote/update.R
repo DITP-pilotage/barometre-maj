@@ -8,7 +8,7 @@ data_hist <- load_data_hist()
 data_pilote <- load_data_pilote()
 
 r <- data_pilote %>%
-  transform_data_pilote() %>%
+  transform_data_pilote(data_hist) %>%
   merge_transformed_pilote_hist(
     transformed_data_pilote = ., 
     data_hist = data_hist
@@ -27,3 +27,4 @@ r %>% count(indic_id, enforce_zone_id, metric_enforce_date) %>% arrange(-n) %>% 
 r%>%filter(indic_id=="IND-200" & enforce_zone_id=="R01" & metric_enforce_date=="2022-05-31")
 
 data_hist %>% filter(indic_id=="IND-263", enforce_zone_id=="D01", metric_enforce_date=="2022-12-31", indic_va==523)
+
