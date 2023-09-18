@@ -1,6 +1,6 @@
-indic_id,enforce_zone_id,metric_enforce_date,indic_vi,indic_va,indic_vc,maille,indic_ta
-IND-291,FRANCE,2022-06-01,17,17,,NAT,0
-IND-291,FRANCE,2023-12-31,,,100,NAT,
-IND-291,FRANCE,2024-12-31,,,100,NAT,
-IND-291,FRANCE,2025-12-31,,,100,NAT,
-IND-291,FRANCE,2026-12-31,,,100,NAT,
+indic_id,enforce_zone_id,metric_enforce_date,is_pilote,maille,is_hist,indic_vi,indic_va,indic_vc_inter,indic_ta_inter,indic_vc_glob,indic_ta_glob
+IND-291,FRANCE,2022-06-01,,NAT,TRUE,17,17,,0,,
+IND-291,FRANCE,2023-12-31,,NAT,TRUE,,,100,,,
+IND-291,FRANCE,2024-12-31,,NAT,TRUE,,,100,,,
+IND-291,FRANCE,2025-12-31,,NAT,TRUE,,,100,,,
+IND-291,FRANCE,2026-12-31,,NAT,TRUE,,,100,,,
