@@ -4,15 +4,15 @@ hist_to_baro <- function(data_hist_) {
     select(
       indic_id, enforce_zone_id, metric_enforce_date, 
       indic_vi, indic_va, 
-      ## indic_vc -> indic_vc_inter
-      indic_vc_inter=indic_vc,
+      ## indic_vc -> indic_vc_glob
+      indic_vc_glob=indic_vc,
       maille, 
-      ## indic_ta -> indic_ta_inter
-      indic_ta_inter=indic_ta
+      ## indic_ta -> indic_ta_glob
+      indic_ta_glob=indic_ta
     ) %>% mutate(
       is_hist=T,
-      indic_vc_glob=NA,
-      indic_ta_glob=NA,
+      indic_vc_inter=NA,
+      indic_ta_inter=NA,
       r=row_number()
     ) %>%
     arrange(indic_id, enforce_zone_id, metric_enforce_date)
@@ -120,6 +120,7 @@ data_hist_formatted <- hist_to_baro(data_hist)
 data_pilote_formatted <- pilote_to_baro(data_pilote, terr)
 
 combine_hist_and_pilote_data(data_hist_formatted, data_pilote_formatted, terr)
+
 
   
 
