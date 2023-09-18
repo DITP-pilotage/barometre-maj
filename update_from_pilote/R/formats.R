@@ -110,7 +110,9 @@ combine_hist_and_pilote_data <- function(data_hist_formatted_, data_pilote_forma
       indic_vc_glob= coalesce(indic_vc_glob.pilote, indic_vc_glob.hist),
       indic_ta_glob= coalesce(indic_ta_glob.pilote, indic_ta_glob.hist)
     ) %>%
-    select(-ends_with(c(".pilote", ".hist")))
+    select(-ends_with(c(".pilote", ".hist"))) %>%
+    arrange(indic_id, enforce_zone_id, metric_enforce_date)
+  
   
 }
 
