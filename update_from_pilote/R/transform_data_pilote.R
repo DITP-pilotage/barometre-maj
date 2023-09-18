@@ -7,7 +7,7 @@
 #'
 #' @examples
 transform_data_pilote <- function(data_pilote_, data_hist) {
-
+  
   terr<-read_csv("../data/ref/territoire.csv", show_col_types = FALSE)
   
   add_zoneid <- function(df_, terr_) {
@@ -95,7 +95,7 @@ transform_data_pilote <- function(data_pilote_, data_hist) {
     # Remove duplicates from data_hist
     left_join((data_hist%>%select(-indic_vc, -indic_ta, -indic_vi, -maille)%>%mutate(in_hist=T)), by=c("indic_id", "enforce_zone_id", "metric_enforce_date", "indic_va" )) %>%
     filter(is.na(in_hist))
-    
+  
   
   transformed_data_pilote <-
     extracted_vi %>%
@@ -114,7 +114,8 @@ transform_data_pilote <- function(data_pilote_, data_hist) {
       indic_id, enforce_zone_id=zone_id, metric_enforce_date, 
       indic_vi, indic_va, indic_vc_inter=vc_inter, indic_vc_glob=vc_glob,
       maille, indic_ta_inter= ta_inter, indic_ta_glob= ta_glob
-    )
+    ) %>%
+    arrange(indic_id, enforce_zone_id, metric_enforce_date)
   
   transformed_data_pilote
 }
