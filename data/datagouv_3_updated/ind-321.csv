@@ -1,4 +1,4 @@
-indic_id,enforce_zone_id,metric_enforce_date,maille,indic_vi,indic_va,indic_vc_inter,indic_ta_inter,indic_vc_glob,indic_ta_glob
-IND-321,FRANCE,2022-05-31,NAT,14,,,,,
-IND-321,FRANCE,2023-06-30,NAT,,11.5,,31.25,,31.25
-IND-321,FRANCE,2026-12-31,NAT,,,6,,6,
+indic_id,enforce_zone_id,metric_enforce_date,maille,indic_vi,indic_va,indic_vc,indic_ta
+IND-321,FRANCE,2022-05-31,NAT,14,,,
+IND-321,FRANCE,2023-06-30,NAT,,11.5,,31.25
+IND-321,FRANCE,2026-12-31,NAT,,,6,
