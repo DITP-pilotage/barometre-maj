@@ -1,5 +1,4 @@
-indic_id,enforce_zone_id,metric_enforce_date,maille,indic_vi,indic_va,indic_vc_inter,indic_ta_inter,indic_vc_glob,indic_ta_glob
-IND-331,FRANCE,2022-12-31,NAT,3.83,,,,,
-IND-331,FRANCE,2023-04-30,NAT,,13.5,,22.399814686124625,,10.606559175167268
-IND-331,FRANCE,2023-12-31,NAT,,,47,,,
-IND-331,FRANCE,2026-12-31,NAT,,,,,95,
+indic_id,enforce_zone_id,metric_enforce_date,maille,indic_vi,indic_va,indic_vc,indic_ta
+IND-331,FRANCE,2022-12-31,NAT,3.83,,,
+IND-331,FRANCE,2023-04-30,NAT,,13.5,,10.606559175167268
+IND-331,FRANCE,2026-12-31,NAT,,,95,

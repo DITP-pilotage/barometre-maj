@@ -1,4 +1,3 @@
-indic_id,enforce_zone_id,metric_enforce_date,maille,indic_vi,indic_va,indic_vc_inter,indic_ta_inter,indic_vc_glob,indic_ta_glob
-IND-395,FRANCE,2022-12-31,NAT,20,20,,0,,0
-IND-395,FRANCE,2023-12-31,NAT,,,17,,,
-IND-395,FRANCE,2026-12-31,NAT,,,,,10,
+indic_id,enforce_zone_id,metric_enforce_date,maille,indic_vi,indic_va,indic_vc,indic_ta
+IND-395,FRANCE,2022-12-31,NAT,20,20,,0
+IND-395,FRANCE,2026-12-31,NAT,,,10,
