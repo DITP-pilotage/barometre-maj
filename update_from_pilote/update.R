@@ -23,7 +23,7 @@ terr<-read_csv("../data/ref/territoire.csv", show_col_types = FALSE)
 data_hist_formatted <- hist_to_baro(data_hist)
 data_pilote_formatted <- pilote_to_baro(data_pilote, terr)
 
-combine_hist_and_pilote_data(data_hist_formatted, data_pilote_formatted %>%head(0), terr) %>%
+combine_hist_and_pilote_data(data_hist_formatted, data_pilote_formatted, terr) %>%
   select(-is_pilote, -is_hist) %>%
   split_in_files()
 
