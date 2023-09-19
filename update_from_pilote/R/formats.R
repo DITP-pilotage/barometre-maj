@@ -79,7 +79,9 @@ pilote_to_baro <- function(data_pilote_, terr_) {
   ## Combine format_vi_vc_ta + format_va
   format_vi_vc_ta %>%
     full_join(format_va, by=c("indic_id", "enforce_zone_id", "metric_enforce_date")) %>%
-    mutate(r=coalesce(r.x, r.y), is_pilote=T) %>% select(-r.x, -r.y)
+    mutate(r=coalesce(r.x, r.y), is_pilote=T) %>% select(-r.x, -r.y) %>%
+    filter(!(is.na(indic_vi) & is.na(indic_va) & is.na(indic_vc_inter) & is.na(indic_ta_inter) & is.na(indic_vc_glob) & is.na(indic_ta_glob)))
+  
   
 }
 
