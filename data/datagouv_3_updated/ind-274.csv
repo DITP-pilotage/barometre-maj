@@ -1,0 +1,4 @@
+indic_id,enforce_zone_id,metric_enforce_date,maille,indic_vi,indic_va,indic_vc_inter,indic_ta_inter,indic_vc_glob,indic_ta_glob
+IND-274,FRANCE,2022-12-31,NAT,0,1.6,,88.8888888888889,,38.095238095238095
+IND-274,FRANCE,2023-12-31,NAT,,,1.8,,,
+IND-274,FRANCE,2026-12-31,NAT,,,,,4.2,
