@@ -108,11 +108,3 @@ combine_hist_and_pilote_data <- function(data_hist_formatted_, data_pilote_forma
     arrange(indic_id, enforce_zone_id, metric_enforce_date)
 
 }
-
-data_hist_formatted <- hist_to_baro(data_hist)
-data_pilote_formatted <- pilote_to_baro(data_pilote, terr)
-
-combine_hist_and_pilote_data(data_hist_formatted, data_pilote_formatted, terr)
-
-
-
