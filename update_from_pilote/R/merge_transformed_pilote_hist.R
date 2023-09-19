@@ -9,7 +9,7 @@ tf_combine <- function(transformed_data_pilote_, data_hist_) {
       indic_id, enforce_zone_id, metric_enforce_date, 
       indic_vi, indic_va, indic_vc_inter=indic_vc,
       maille, indic_ta_inter=indic_ta
-    ) %>%
+    ) %>% mutate(is_hist=T) %>%
     bind_rows(transformed_data_pilote_)
   
   
