@@ -46,7 +46,7 @@ pilote_to_baro <- function(data_pilote_, terr_) {
   ## Format values for: vi vc_inter vc_glob ta_inter ta_glob
   format_vi_vc_ta <- 
     cleaned_data_pilote %>%
-    select(indic_id, enforce_zone_id, vi_date, vi, vc_glob_date, vc_glob, vc_inter_date, vc_inter, ta_inter, ta_glob, ta_date=va_date, r) %>%
+    select(indic_id, enforce_zone_id, vi_date, vi, vc_glob_date, vc_glob, vc_inter_date, vc_inter, ta_inter, ta_glob, ta_date=va_date, maille, r) %>%
     pivot_longer(cols = c("vi", "vc_inter", "vc_glob", "ta_inter", "ta_glob"), names_to = c("metric_type"), values_to = c("metric_value")) %>%
     filter(!is.na(metric_value)) %>%
     mutate(metric_enforce_date= case_when(
@@ -70,14 +70,14 @@ pilote_to_baro <- function(data_pilote_, terr_) {
   ## Format va
   format_va <-
     cleaned_data_pilote %>%
-    select(indic_id, enforce_zone_id, va_evol, va_evol_date, r) %>%
+    select(indic_id, enforce_zone_id, va_evol, va_evol_date, r, maille) %>%
     # Remove curly braces
     mutate(va_evol=str_sub(va_evol, 2, -2), va_evol_date=str_sub(va_evol_date, 2, -2)) %>%
     # Explode array
     separate_longer_delim(c(va_evol, va_evol_date), delim = ",") %>%
     # Cast to date
     mutate(va_evol=as.double(va_evol), metric_enforce_date=as.Date(str_sub(va_evol_date, 2, -2)))%>%
-    select(indic_id, enforce_zone_id, metric_enforce_date, indic_va=va_evol, r)
+    select(indic_id, enforce_zone_id, metric_enforce_date, indic_va=va_evol, maille, r)
   
   ## Combine format_vi_vc_ta + format_va
   format_vi_vc_ta %>%
@@ -111,9 +111,10 @@ combine_hist_and_pilote_data <- function(data_hist_formatted_, data_pilote_forma
       indic_vc_inter= coalesce(indic_vc_inter.pilote, indic_vc_inter.hist),
       indic_ta_inter= coalesce(indic_ta_inter.pilote, indic_ta_inter.hist),
       indic_vc_glob= coalesce(indic_vc_glob.pilote, indic_vc_glob.hist),
-      indic_ta_glob= coalesce(indic_ta_glob.pilote, indic_ta_glob.hist)
+      indic_ta_glob= coalesce(indic_ta_glob.pilote, indic_ta_glob.hist),
+      maille= coalesce(maille.x, maille.y, maille)
     ) %>%
-    select(-ends_with(c(".pilote", ".hist"))) %>%
+    select(-ends_with(c(".pilote", ".hist", "maille.x", "maille.y"))) %>%
     arrange(indic_id, enforce_zone_id, metric_enforce_date)
   
   
