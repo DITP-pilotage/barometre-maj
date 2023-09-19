@@ -4,15 +4,13 @@ hist_to_baro <- function(data_hist_) {
     select(
       indic_id, enforce_zone_id, metric_enforce_date, 
       indic_vi, indic_va, 
-      ## indic_vc -> indic_vc_glob
-      indic_vc_glob=indic_vc,
+      ## indic_vc -> indic_vc
+      indic_vc=indic_vc,
       maille, 
-      ## indic_ta -> indic_ta_glob
-      indic_ta_glob=indic_ta
+      ## indic_ta -> indic_ta
+      indic_ta=indic_ta
     ) %>% mutate(
       is_hist=T,
-      indic_vc_inter=NA,
-      indic_ta_inter=NA,
       r=row_number()
     ) %>%
     arrange(indic_id, enforce_zone_id, metric_enforce_date)
@@ -33,34 +31,29 @@ pilote_to_baro <- function(data_pilote_, terr_) {
            va_evol_date=evolution_date_valeur_actuelle, va_evol=evolution_valeur_actuelle,
            vi_date=date_valeur_initiale, vi=valeur_initiale, 
            maille,
-           vc_glob_date=objectif_date_valeur_cible, vc_glob=objectif_valeur_cible,
-           vc_inter_date=objectif_date_valeur_cible_intermediaire, vc_inter=objectif_valeur_cible_intermediaire,
-           ta_inter=objectif_taux_avancement_intermediaire, ta_glob=objectif_taux_avancement
+           vc_date=objectif_date_valeur_cible, vc=objectif_valeur_cible,
+           ta=objectif_taux_avancement
            )%>% 
     mutate(r=row_number()) %>%
     arrange(indic_id, enforce_zone_id, va_date)
   
-  ## Format values for: vi vc_inter vc_glob ta_inter ta_glob
+  ## Format values for: vi vc  ta
   format_vi_vc_ta <- 
     cleaned_data_pilote %>%
-    select(indic_id, enforce_zone_id, vi_date, vi, vc_glob_date, vc_glob, vc_inter_date, vc_inter, ta_inter, ta_glob, ta_date=va_date, maille, r) %>%
-    pivot_longer(cols = c("vi", "vc_inter", "vc_glob", "ta_inter", "ta_glob"), names_to = c("metric_type"), values_to = c("metric_value")) %>%
+    select(indic_id, enforce_zone_id, vi_date, vi, vc_date, vc, ta, ta_date=va_date, maille, r) %>%
+    pivot_longer(cols = c("vi", "vc", "ta"), names_to = c("metric_type"), values_to = c("metric_value")) %>%
     filter(!is.na(metric_value)) %>%
     mutate(metric_enforce_date= case_when(
       metric_type=="vi" ~ vi_date,
-      metric_type=="vc_glob" ~ vc_glob_date,
-      metric_type=="vc_inter" ~ vc_inter_date,
-      metric_type=="ta_inter" ~ ta_date,
-      metric_type=="ta_glob" ~ ta_date
+      metric_type=="vc" ~ vc_date,
+      metric_type=="ta" ~ ta_date
     )) %>%
-    select(-vi_date, -vc_glob_date, -vc_inter_date, -ta_date) %>%
+    select(-vi_date, -vc_date, -ta_date) %>%
     pivot_wider(names_from = metric_type, values_from = metric_value) %>%
     rename(
       indic_vi=vi,
-      indic_vc_glob=vc_glob,
-      indic_vc_inter=vc_inter,
-      indic_ta_inter=ta_inter,
-      indic_ta_glob=ta_glob
+      indic_vc=vc,
+      indic_ta=ta
       )
   
   
@@ -80,7 +73,7 @@ pilote_to_baro <- function(data_pilote_, terr_) {
   format_vi_vc_ta %>%
     full_join(format_va, by=c("indic_id", "enforce_zone_id", "metric_enforce_date")) %>%
     mutate(r=coalesce(r.x, r.y), is_pilote=T) %>% select(-r.x, -r.y) %>%
-    filter(!(is.na(indic_vi) & is.na(indic_va) & is.na(indic_vc_inter) & is.na(indic_ta_inter) & is.na(indic_vc_glob) & is.na(indic_ta_glob)))
+    filter(!(is.na(indic_vi) & is.na(indic_va) & is.na(indic_vc) & is.na(indic_ta)))
   
   
 }
@@ -107,10 +100,8 @@ combine_hist_and_pilote_data <- function(data_hist_formatted_, data_pilote_forma
     mutate(
       indic_vi= coalesce(indic_vi.pilote, indic_vi.hist),
       indic_va= coalesce(indic_va.pilote, indic_va.hist),
-      indic_vc_inter= coalesce(indic_vc_inter.pilote, indic_vc_inter.hist),
-      indic_ta_inter= coalesce(indic_ta_inter.pilote, indic_ta_inter.hist),
-      indic_vc_glob= coalesce(indic_vc_glob.pilote, indic_vc_glob.hist),
-      indic_ta_glob= coalesce(indic_ta_glob.pilote, indic_ta_glob.hist),
+      indic_vc= coalesce(indic_vc.pilote, indic_vc.hist),
+      indic_ta= coalesce(indic_ta.pilote, indic_ta.hist),
       maille= coalesce(maille.x, maille.y, maille)
     ) %>%
     select(-ends_with(c(".pilote", ".hist", "maille.x", "maille.y"))) %>%
