@@ -2,6 +2,7 @@ source('R/load_data.R')
 source('R/transform_data_pilote.R')
 source('R/merge_transformed_pilote_hist.R')
 source('R/split_in_files.R')
+source('R/formats.R')
 
 data_hist <- load_data_hist()
 
