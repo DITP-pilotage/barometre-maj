@@ -38,7 +38,10 @@ pilote_to_baro <- function(data_pilote_, terr_) {
            ta_inter=objectif_taux_avancement_intermediaire, ta_glob=objectif_taux_avancement
            )%>% 
     mutate(r=row_number()) %>%
-    arrange(indic_id, enforce_zone_id, va_date)
+    arrange(indic_id, enforce_zone_id, va_date) %>%
+    # remove rows with no data
+    filter(!(is.na(va_date) & is.na(va) & is.na(va_evol_date) & is.na(va_evol) & is.na(vi_date) & is.na(vi)& is.na(vc_glob_date)& is.na(vc_glob)& is.na(vc_inter_date)& is.na(vc_inter)& is.na(ta_inter)& is.na(ta_glob)))
+  
   
   ## Format values for: vi vc_inter vc_glob ta_inter ta_glob
   format_vi_vc_ta <- 
@@ -116,10 +119,10 @@ combine_hist_and_pilote_data <- function(data_hist_formatted_, data_pilote_forma
   
 }
 
-data_hist_formatted <- hist_to_baro(data_hist)
-data_pilote_formatted <- pilote_to_baro(data_pilote, terr)
+#data_hist_formatted <- hist_to_baro(data_hist)
+#data_pilote_formatted <- pilote_to_baro(data_pilote, terr)
 
-combine_hist_and_pilote_data(data_hist_formatted, data_pilote_formatted, terr)
+#combine_hist_and_pilote_data(data_hist_formatted, data_pilote_formatted, terr)
 
 
   
