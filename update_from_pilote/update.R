@@ -18,6 +18,17 @@ r %>%
   split_in_files(indic_data = .)  
 
 
+terr<-read_csv("../data/ref/territoire.csv", show_col_types = FALSE)
+
+data_hist_formatted <- hist_to_baro(data_hist)
+data_pilote_formatted <- pilote_to_baro(data_pilote, terr)
+
+combine_hist_and_pilote_data(data_hist_formatted, data_pilote_formatted %>%head(0), terr) %>%
+  select(-is_pilote, -is_hist) %>%
+  split_in_files()
+
+
+
 # TODO: correct dupplicates:
 ## on 1 column: indic_va
 r %>% count(indic_id, enforce_zone_id, metric_enforce_date, indic_va) %>% filter(n>1 & !is.na(indic_va))
