@@ -1,11 +1,12 @@
 {
   "scripts": {
-    "start": "npx tsc && node dist/app.js"
+    "start": "npx tsc && node dist/app.js",
+    "start-dev": "npm run prepublish --prefix /home/colin/datagouv-ts/ && npm link datagouv-ts && npx tsc && node dist/app.js"
   },
   "dependencies": {
     "commander": "^11.0.0",
     "current-git-branch": "^1.1.0",
-    "datagouv-ts": "^1.0.4",
+    "datagouv-ts": "^1.0",
     "dotenv": "^16.3.1",
     "fs.promises": "^0.1.2",
     "gitlog": "^4.0.8",
