@@ -2,14 +2,13 @@ import {config} from './config'
 import 'dotenv/config';
 
 import * as https from 'https'
-import * as fs from 'fs'
-import { Datagouv } from './Datagouv';
+import * as fs from 'node:fs/promises';import { Datagouv } from './Datagouv';
 const branchName = require('current-git-branch');
 
 function dl(url: string, outfile: string) {
 
     return new Promise((resolve, reject) => {
-
+        //@ts-ignore
         const file = fs.createWriteStream(outfile);
         https.get(url, function(response: any) {
            response.pipe(file);
