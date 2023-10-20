@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+    app:
+        build:
+            context: ..
+            dockerfile: docker/Dockerfile
+        volumes:
+            - ../data/:/app/data/
+            - ../update_from_pilote:/app/update_from_pilote
+        

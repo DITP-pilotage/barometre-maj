@@ -29,3 +29,7 @@ npm run start -- push-datagouv 24
 - Lancer de nouveau la synchronisation sur cette branche. (En effet, les *resources* créée lors du passage du script sur la branche *pre-prod* est un *dataset Datagouv* différent de celui de prod. Il faut donc synchroniser ce *dataset* également.)
 - Regarder l'effet produit sur l'instance prod du baromètre
 - Supprimer la branche *data-update*
+
+## Utilisation du script R
+
+Dans le dossier `/docker`, use `docker-compose up`.
