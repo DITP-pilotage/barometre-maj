@@ -10,16 +10,16 @@ export const config = {
     GH_USER: "DITP-pilotage",
     branch: {
         "main": {
-            datagouv: {API_BASE_URL: "https://www.data.gouv.fr/api/1", DATASET: process.env.DATASET_PROD}
+            datagouv: {API_BASE_URL: "https://www.data.gouv.fr/api/1", DATASET: process.env.DATASET_PROD, API_KEY_VAR: "PROD_API_KEY"}
         },
         "prod": {
-            datagouv: {API_BASE_URL: "https://www.data.gouv.fr/api/1", DATASET: process.env.DATASET_PROD}
+            datagouv: {API_BASE_URL: "https://www.data.gouv.fr/api/1", DATASET: process.env.DATASET_PROD, API_KEY_VAR: "PROD_API_KEY"}
         },
         "pre-prod": {
-            datagouv: {API_BASE_URL: "https://demo.data.gouv.fr/api/1", DATASET: process.env.DATASET_DEMO}
+            datagouv: {API_BASE_URL: "https://demo.data.gouv.fr/api/1", DATASET: process.env.DATASET_DEMO, API_KEY_VAR: "DEMO_API_KEY"}
         },
         "test": {
-            datagouv: {API_BASE_URL: "https://demo.data.gouv.fr/api/1", DATASET: process.env.DATASET_TEST}
+            datagouv: {API_BASE_URL: "https://demo.data.gouv.fr/api/1", DATASET: process.env.DATASET_TEST, API_KEY_VAR: "DEMO_API_KEY"}
         }
     }
 }
