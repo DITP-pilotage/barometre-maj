@@ -1,3 +1,5 @@
+library("lubridate")
+
 # Transform data from format hist to format baro
 hist_to_baro <- function(data_hist_) {
   data_hist_ %>%
