@@ -83,10 +83,15 @@ combine_hist_and_pilote_data <- function(data_hist_formatted_, data_pilote_forma
 
   
   
-  # join hist data and pilote data
-  intermediate <- data_pilote_formatted_ %>%
-    full_join(data_hist_formatted_, by=c(
-      "indic_id", "enforce_zone_id", "metric_enforce_date"
+  # join hist data and pilote data on date of MONTH
+  intermediate <- 
+    data_pilote_formatted_ %>%
+    # get last day of month
+    mutate(metric_enforce_date_month=ceiling_date(as.Date(metric_enforce_date), 'month') - days(1)) %>%
+    full_join(
+      (data_hist_formatted_ %>% mutate(metric_enforce_date_month=ceiling_date(as.Date(metric_enforce_date), 'month') - days(1)))
+      , by=c(
+      "indic_id", "enforce_zone_id", "metric_enforce_date_month"
     ), suffix=c(".pilote", ".hist")) 
   
   # introspect data
@@ -105,6 +110,6 @@ combine_hist_and_pilote_data <- function(data_hist_formatted_, data_pilote_forma
       maille= coalesce(maille.x, maille.y, maille)
     ) %>%
     select(-ends_with(c(".pilote", ".hist", "maille.x", "maille.y"))) %>%
-    arrange(indic_id, enforce_zone_id, metric_enforce_date)
+    arrange(indic_id, enforce_zone_id, metric_enforce_date_month)
 
 }
