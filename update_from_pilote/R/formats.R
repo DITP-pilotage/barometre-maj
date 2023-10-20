@@ -112,6 +112,7 @@ combine_hist_and_pilote_data <- function(data_hist_formatted_, data_pilote_forma
       maille= coalesce(maille.x, maille.y, maille)
     ) %>%
     select(-ends_with(c(".pilote", ".hist", "maille.x", "maille.y"))) %>%
-    arrange(indic_id, enforce_zone_id, metric_enforce_date_month)
+    arrange(indic_id, enforce_zone_id, metric_enforce_date_month) %>%
+    rename(metric_enforce_date=metric_enforce_date_month)
 
 }
