@@ -6,6 +6,7 @@ services:
             context: ..
             dockerfile: docker/Dockerfile
         volumes:
+            - ../config/:/app/config/
             - ../data/:/app/data/
             - ../update_from_pilote:/app/update_from_pilote
         
