@@ -26,7 +26,7 @@ data_pilote_formatted <- pilote_to_baro(data_pilote, terr)
 
 combine_hist_and_pilote_data(data_hist_formatted, data_pilote_formatted, terr) %>%
   select(-is_pilote, -is_hist) %>%
-  split_in_files()
+  split_in_files("../config/export-config.csv", "export_oct_23")
 
 
 

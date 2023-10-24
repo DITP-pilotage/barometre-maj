@@ -8,9 +8,23 @@ library(stringr)
 #' @export
 #'
 #' @examples
-split_in_files <- function(indic_data) {
-  OUT_DIR <- '../data/datagouv_3_updated/'
-  data_splitted <- split(indic_data, indic_data$indic_id)
+split_in_files <- function(indic_data, export_config_filepath, export_name) {
+  
+  export_config <- read_csv(export_config_filepath, show_col_types = FALSE)
+  
+  ROOT_OUT_DIR <- '../data/exports/'
+  OUT_DIR <- paste0(ROOT_OUT_DIR, export_name, "/")
+  dir.create(OUT_DIR, showWarnings = FALSE)
+  
+  # Df filtré en ne gardant que les indicateurs qui sont spécifiés pour cet export
+  indic_data_filtered <- 
+    export_config %>%
+    # on sélectionne les lignes TRUE dans la colonne qui porte le nom de l'export
+    filter(!!as.symbol(export_name)) %>% 
+    select(indic_id) %>% 
+    left_join(indic_data, by="indic_id")
+
+  data_splitted <- split(indic_data_filtered, indic_data_filtered$indic_id)
   
   written_rows_cnt <- lapply(data_splitted, function(df_indic){
     current_indic <- as.character(unique(df_indic[["indic_id"]]))
