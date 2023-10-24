@@ -2,7 +2,7 @@ import {config} from './config'
 import 'dotenv/config';
 
 import * as https from 'https'
-import * as fs from 'node:fs/promises';import { Datagouv } from './Datagouv';
+import * as fs from 'fs';import { Datagouv } from './Datagouv';
 const branchName = require('current-git-branch');
 
 function dl(url: string, outfile: string) {
@@ -51,3 +51,5 @@ export async function dlDatagouvFiles(dest: string= config.OUT_DIR): Promise<voi
         console.log("Files downloaded at "+dest);
     })
 }
+
+dlDatagouvFiles('current_datagouv')
