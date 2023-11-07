@@ -4,7 +4,11 @@ source('R/merge_transformed_pilote_hist.R')
 source('R/split_in_files.R')
 source('R/formats.R')
 
-data_hist <- load_data_hist()
+# Indicateurs pour lesquels on ne prend pas en compte les valeurs historiques
+indic_ignore_hist <- c('IND-311')
+
+data_hist <- load_data_hist() %>%
+  filter(! indic_id %in% indic_ignore_hist)
 
 data_pilote <- load_data_pilote()
 
