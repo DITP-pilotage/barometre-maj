@@ -25,6 +25,8 @@ combine_hist_and_pilote_data(data_hist_formatted, data_pilote_formatted, terr) %
   filter(!(indic_id=="IND-718" & is.na(metric_enforce_date))) %>%
   filter(!(indic_id=="IND-719" & is.na(metric_enforce_date))) %>%
   filter(!(indic_id=="IND-720" & is.na(metric_enforce_date))) %>%
+  # On ignore les valeurs de 02-2023 pour le 314
+  filter(!(indic_id=="IND-314" & metric_enforce_date=="2023-02-28")) %>%
   # On ignore le 957 toutes les val REG et DEPT
   filter(!(indic_id=="IND-957" & (maille=="REG"|maille=="DEPT"))) %>%
   # On ignore le 301 toutes les val DEPT
