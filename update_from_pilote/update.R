@@ -21,6 +21,10 @@ combine_hist_and_pilote_data(data_hist_formatted, data_pilote_formatted, terr) %
   select(-is_pilote, -is_hist) %>%
   # On ignore le 232 si pas de date et REG
   filter(!(indic_id=="IND-232" & is.na(metric_enforce_date) & maille=="REG")) %>%
+  # On ignore les valeurs sans date pour le 718,719,720
+  filter(!(indic_id=="IND-718" & is.na(metric_enforce_date))) %>%
+  filter(!(indic_id=="IND-719" & is.na(metric_enforce_date))) %>%
+  filter(!(indic_id=="IND-720" & is.na(metric_enforce_date))) %>%
   # On ignore le 957 toutes les val REG et DEPT
   filter(!(indic_id=="IND-957" & (maille=="REG"|maille=="DEPT"))) %>%
   # On ignore le 301 toutes les val DEPT
