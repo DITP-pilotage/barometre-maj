@@ -17,7 +17,10 @@ data_pilote <- load_data_pilote()
 terr<-read_csv("../data/ref/territoire.csv", show_col_types = FALSE)
 
 data_hist_formatted <- hist_to_baro(data_hist)
-data_pilote_formatted <- pilote_to_baro(data_pilote, terr)
+data_pilote_formatted <- pilote_to_baro(data_pilote, terr) %>%
+  # suppr des VA postérieures à juillet-23 pour le moment pour le IND-301 et 302
+  mutate(indic_va=if_else((metric_enforce_date>"2023-07-31" & indic_id=="IND-301"),NA,indic_va)) %>%
+  mutate(indic_va=if_else((metric_enforce_date>"2023-07-31" & indic_id=="IND-302"),NA,indic_va))
 
 combine_hist_and_pilote_data(data_hist_formatted, data_pilote_formatted, terr) %>%
   select(-is_pilote, -is_hist) %>%
