@@ -8,7 +8,9 @@ source('R/formats.R')
 indic_ignore_hist <- c('IND-311')
 
 data_hist <- load_data_hist() %>%
-  filter(! indic_id %in% indic_ignore_hist)
+  filter(! indic_id %in% indic_ignore_hist) %>%
+  # On suppr les VI historiques de IND-314 du 2022-12-31
+  mutate(indic_vi=if_else((metric_enforce_date=="2022-12-31" & indic_id=="IND-314"),NA,indic_vi))
 
 data_pilote <- load_data_pilote()
 
