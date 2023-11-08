@@ -69,7 +69,10 @@ pilote_to_baro <- function(data_pilote_, terr_) {
     separate_longer_delim(c(va_evol, va_evol_date), delim = ",") %>%
     # Cast to date
     mutate(va_evol=as.double(va_evol), metric_enforce_date=as.Date(str_sub(va_evol_date, 2, -2)))%>%
-    select(indic_id, enforce_zone_id, metric_enforce_date, indic_va=va_evol, maille, r)
+    select(indic_id, enforce_zone_id, metric_enforce_date, indic_va=va_evol, maille, r) %>% 
+    # [temporaire] Suppr les va du IND-301 et 302 postérieurs à 08/23
+    filter(! (indic_id=="IND-302" & metric_enforce_date > "2023-08-31")) %>%
+    filter(! (indic_id=="IND-301" & metric_enforce_date > "2023-08-31"))
 
   ## Combine format_vi_vc_ta + format_va
   format_vi_vc_ta %>%
