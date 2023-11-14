@@ -33,4 +33,4 @@ combine_hist_and_pilote_data(data_hist_formatted, data_pilote_formatted, terr) %
   filter(!(indic_id=="IND-957" & (maille=="REG"|maille=="DEPT"))) %>%
   # On ignore le 301 toutes les val DEPT
   filter(!(indic_id=="IND-301" & maille=="DEPT")) %>%
-  split_in_files("../config/export-config.csv", "ex_8_nov_23")
+  split_in_files("../config/export-config.csv", "ex_22_nov_23")
