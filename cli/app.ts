@@ -1,38 +1,95 @@
-import { Command } from 'commander';
-const program = new Command();
-import {dlDatagouvFiles} from './dl_datagouv_files';
-import { notifyDatagouvChanges } from './notify_datagouv_changes';
-import { config } from './config';
-import { Github } from './Github';
+#!/usr/bin/env node
+import yargs from 'yargs'
+import {hideBin} from 'yargs/helpers'
+import {Datagouv, DatagouvResourceCustom} from 'datagouv-ts'
+import {Datagouv as DatagouvLocal} from './Datagouv'
+import { readFile, readdir } from 'fs/promises';
+const branchName = require('current-git-branch');
+import {config} from './config'
 
-program
-  .name('barometre-maj')
-  .description("CLI pour mettre à jour les données du baromètre de l'action publique")
-  .version('0.0.1');
 
-program.command('dl-datagouv')
-  .description('Télécharge les fichiers actuellement présents sur datagouv')
-  .option('-d, --destination <path>', 'destination directory')
-  .action(async (opts:{destination: string}, _:any) => {
-    console.log({opts});
+
+//@ts-ignore
+const datagouvConfig : any = config.branch[branchName()].datagouv;
+
+yargs(hideBin(process.argv))
+  .parserConfiguration({"boolean-negation": false})
+  .command('delete <pattern>', 'Delete resource based on their title', (yargs) => {
+    return yargs
+      .positional('pattern', {
+        describe: 'pattern of resources title to delete',
+        type: "string",
+      })
+  },  async (argv_) => {
+    let deleted_resources: DatagouvResourceCustom[] = await Datagouv.deleteResourceDatasetPattern(
+        datagouvConfig.DATASET, datagouvConfig.API_BASE_URL, 
+        process.env[datagouvConfig.API_KEY_VAR]!, 
+        argv_.pattern!, Boolean(argv_["no-dry-run"]),
+        Boolean(argv_.verbose)
+        )
+    console.log({deleted_resources: deleted_resources.map(e=> e.title)});
+    }
+  )
+  .command('publish <path>', 'Publish all files in <path>', (yargs) => {
+    return yargs
+      .positional('path', {
+        describe: 'Publish all files of this dir',
+        type: "string",
+      })
+  },  async (argv_) => {
+    let uploaded_files: any[] = await publishData(
+        datagouvConfig.DATASET, datagouvConfig.API_BASE_URL, 
+        process.env[datagouvConfig.API_KEY_VAR]!, 
+        argv_.path!, Boolean(argv_["no-dry-run"]),
+        Boolean(argv_.verbose)
+        )
+    console.log({uploaded_files: uploaded_files.map(e=> e.title)});
+    }
+  )
+  .command('download <out-dir>', 'Download all resources in <out-dir>', (yargs) => {
+    return yargs
+      .positional('out-dir', {
+        describe: 'Publish all files of this dir',
+        type: "string",
+        default: config.OUT_DIR
+      })
+  },  async (argv_) => {
+
+    //@ts-ignore
+    const datagouvEnv = config.branch[branchName()].datagouv;
     
-    await dlDatagouvFiles(opts.destination);
+    let vvoid = await DatagouvLocal.download(argv_['out-dir'], datagouvEnv.API_BASE_URL, datagouvEnv.DATASET, Boolean(argv_["no-dry-run"]))
+    }
+  )
+  .option('verbose', {
+    alias: 'v',
+    type: 'boolean',
+    description: 'Run with verbose logging'
+  })
+  .option('no-dry-run', {
+    type: 'boolean',
+    default: false,
+    description: 'Do not run in dry-run mode. By default, all commands run in dry-mode.'
+  })
+  .parse()
 
-  });
+async function publishData(dataset_id:string, api_base_url: string, api_key:string, path_: string, confirmCreate: boolean, verbose: boolean) {
+  
+  let files: string[] = (await readdir(path_))
+  if (verbose) console.log(["[publishData] Files found in", path_, "(creating corresponding resources):", JSON.stringify(files)].join(" "));
+  let createdResources: DatagouvResourceCustom[] = [];
+
+  for (let file of files) {
+    let file_fullpath = [path_, file].join("/");
+    // Create datagouv resource corresponding 
+    let createdResource: DatagouvResourceCustom = await Datagouv.createResourceFromFile(file_fullpath, api_base_url, dataset_id, api_key);
+    createdResources.push(createdResource);
+    // If dry run, delete resources just created
+    if (!confirmCreate) await Datagouv.deleteResource(createdResource.id, api_base_url, dataset_id, api_key);
+  }
 
 
-program.command('push-datagouv')
-  .description('Met à jour les resources du jeu de données datagouv')
-  .argument('<pr-id>', 'Identifiant de la PR à inspecter')
-  .option('-d, --directory <path>', 'source directory')
-  .action(async (pr_id: number, opts:{directory: string}) => {
-    console.log({opts});
-    
-    let modifiedFilesInPR: string[] = await Github.getUpdatedFilesPR(pr_id, config.SOURCE_DIR_TO_UPLOAD_REPO);
-    console.log({modifiedFilesInPR});
-    
-    await notifyDatagouvChanges(modifiedFilesInPR, pr_id);
-    
-  });
+  return createdResources;
+  
 
-program.parse();
+}
