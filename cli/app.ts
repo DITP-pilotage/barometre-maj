@@ -91,6 +91,8 @@ async function publishData(dataset_id:string, api_base_url: string, api_key:stri
     createdResources.push(createdResource);
     // If dry run, delete resources just created
     if (!confirmCreate) await Datagouv.deleteResource(createdResource.id, api_base_url, dataset_id, api_key);
+    console.log("Resource created: "+createdResource.title);
+    
   }
 
 
