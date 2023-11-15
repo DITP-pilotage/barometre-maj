@@ -18,8 +18,8 @@ export const config = {
         "pre-prod": {
             datagouv: {API_BASE_URL: "https://demo.data.gouv.fr/api/1", DATASET: process.env.DATASET_DEMO, API_KEY_VAR: "DEMO_API_KEY"}
         },
-        "test": {
-            datagouv: {API_BASE_URL: "https://demo.data.gouv.fr/api/1", DATASET: process.env.DATASET_TEST, API_KEY_VAR: "DEMO_API_KEY"}
+        "maj-08-11-23": {
+            datagouv: {API_BASE_URL: "https://demo.data.gouv.fr/api/1", DATASET: process.env.DATASET_08_11_23, API_KEY_VAR: "DEMO_API_KEY"}
         }
     }
 }
