@@ -1,0 +1,6 @@
+install.packages("readr")
+install.packages("dplyr")
+install.packages("tidyr")
+install.packages("magrittr")
+install.packages("stringr")
+install.packages("lubridate")
