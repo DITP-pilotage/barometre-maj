@@ -65,7 +65,7 @@ export class Datagouv {
         return this.updateResource(resource, {description});
     }
 
-    static async download(dest: string, baseUrl: string, datasetId: string, confirmDownload: boolean=false): Promise<void> {
+    static async download(pattern:string, dest: string, baseUrl: string, datasetId: string, confirmDownload: boolean=false): Promise<void> {
 
         //@ts-ignore
         const datagouvEnv = config.branch[branchName()].datagouv;
@@ -84,7 +84,8 @@ export class Datagouv {
                 format: e.format
             }));
             console.log(mapped.slice(1,3));
-            return mapped;
+            // Filter based on regex pattern
+            return mapped.filter((r:any)=>RegExp(pattern).test(r.title));
         }).then(async (mapped: any) => {
             for (let resource of mapped) {
                 if (confirmDownload) await this.downloadToFile(resource.url, [dest,resource.title].join("/"))

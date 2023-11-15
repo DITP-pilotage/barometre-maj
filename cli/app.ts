@@ -46,8 +46,13 @@ yargs(hideBin(process.argv))
     console.log({uploaded_files: uploaded_files.map(e=> e.title)});
     }
   )
-  .command('download <out-dir>', 'Download all resources in <out-dir>', (yargs) => {
+  .command('download <pattern> <out-dir>', 'Download all resources matching regexp <pattern> in <out-dir>', (yargs) => {
     return yargs
+      .positional('pattern', {
+        describe: 'pattern of resources title to download',
+        default: ".*",
+        type: "string",
+      })
       .positional('out-dir', {
         describe: 'Publish all files of this dir',
         type: "string",
@@ -58,7 +63,7 @@ yargs(hideBin(process.argv))
     //@ts-ignore
     const datagouvEnv = config.branch[branchName()].datagouv;
     
-    let vvoid = await DatagouvLocal.download(argv_['out-dir'], datagouvEnv.API_BASE_URL, datagouvEnv.DATASET, Boolean(argv_["no-dry-run"]))
+    let vvoid = await DatagouvLocal.download( argv_["pattern"], argv_['out-dir'], datagouvEnv.API_BASE_URL, datagouvEnv.DATASET, Boolean(argv_["no-dry-run"]))
     }
   )
   .option('verbose', {
