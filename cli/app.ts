@@ -2,6 +2,7 @@
 import yargs from 'yargs'
 import {hideBin} from 'yargs/helpers'
 import {Datagouv, DatagouvResourceCustom} from 'datagouv-ts'
+import {Datagouv as DatagouvLocal} from './Datagouv'
 import { readFile, readdir } from 'fs/promises';
 const branchName = require('current-git-branch');
 import {config} from './config'
@@ -43,6 +44,21 @@ yargs(hideBin(process.argv))
         Boolean(argv_.verbose)
         )
     console.log({uploaded_files: uploaded_files.map(e=> e.title)});
+    }
+  )
+  .command('download <out-dir>', 'Download all resources in <out-dir>', (yargs) => {
+    return yargs
+      .positional('out-dir', {
+        describe: 'Publish all files of this dir',
+        type: "string",
+        default: config.OUT_DIR
+      })
+  },  async (argv_) => {
+
+    //@ts-ignore
+    const datagouvEnv = config.branch[branchName()].datagouv;
+    
+    let vvoid = await DatagouvLocal.download(argv_['out-dir'], datagouvEnv.API_BASE_URL, datagouvEnv.DATASET, Boolean(argv_["no-dry-run"]))
     }
   )
   .option('verbose', {

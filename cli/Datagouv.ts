@@ -1,4 +1,6 @@
 import {config} from './config'
+import * as https from 'https'
+import * as fs from 'fs';
 const branchName = require('current-git-branch');
 
 export class Datagouv {
@@ -61,6 +63,54 @@ export class Datagouv {
 
     static updateResourceDescription(resource: DatagouvResourceCustom, description: string): Promise<void>{
         return this.updateResource(resource, {description});
+    }
+
+    static async download(dest: string, baseUrl: string, datasetId: string, confirmDownload: boolean=false): Promise<void> {
+
+        //@ts-ignore
+        const datagouvEnv = config.branch[branchName()].datagouv;
+    
+    
+        return this.getDatasetMetadata(datagouvEnv.API_BASE_URL, datagouvEnv.DATASET)
+            .then((r: any) => {
+            let mapped : any[] = r.resources.map((e: any) => ({
+                id: e.id,
+                created_at: e.created_at,
+                last_modified: e.last_modified,
+                title: e.title,
+                latest: e.latest,
+                url: e.url,
+                description: e.description,
+                format: e.format
+            }));
+            console.log(mapped.slice(1,3));
+            return mapped;
+        }).then(async (mapped: any) => {
+            for (let resource of mapped) {
+                if (confirmDownload) await this.downloadToFile(resource.url, [dest,resource.title].join("/"))
+                else console.log("[skipped] File downloaded at "+[dest,resource.title].join("/"));
+            }
+            console.log(mapped.length + " files downloaded at "+dest);
+        })
+    }
+
+    static downloadToFile(url: string, outfile: string) {
+
+        return new Promise((resolve, reject) => {
+            //@ts-ignore
+            const file = fs.createWriteStream(outfile);
+            https.get(url, function(response: any) {
+               response.pipe(file);
+            
+               // after download completed close filestream
+               file.on("finish", () => {
+                   file.close();
+                   console.log("File downloaded at "+outfile);
+                   resolve(outfile);
+               });
+            });
+        })
+        
     }
 }
 
