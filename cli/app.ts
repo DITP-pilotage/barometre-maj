@@ -86,14 +86,18 @@ async function publishData(dataset_id:string, api_base_url: string, api_key:stri
 
   for (let file of files) {
     let file_fullpath = [path_, file].join("/");
-    // Create datagouv resource corresponding 
-    let createdResource: DatagouvResourceCustom = await Datagouv.createResourceFromFile(file_fullpath, api_base_url, dataset_id, api_key);
-    createdResources.push(createdResource);
-    // If dry run, delete resources just created
-    if (!confirmCreate) await Datagouv.deleteResource(createdResource.id, api_base_url, dataset_id, api_key);
-    console.log("Resource created: "+createdResource.title);
-    
+    if (confirmCreate) {
+      // Create datagouv resource corresponding 
+      let createdResource: DatagouvResourceCustom = await Datagouv.createResourceFromFile(file_fullpath, api_base_url, dataset_id, api_key);
+      createdResources.push(createdResource);
+      console.log("Resource created: "+createdResource.title);
+    }
+    else {
+      console.log("Resource created for "+file_fullpath);
+    }    
   }
+  console.log("Total files processed: "+files.length);
+  
 
 
   return createdResources;
