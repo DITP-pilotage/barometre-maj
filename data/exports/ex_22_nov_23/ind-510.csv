@@ -1,2 +1,3 @@
 indic_id,enforce_zone_id,metric_enforce_date,maille,indic_vi,indic_va,indic_vc,indic_ta
-IND-510,,,,,,,
+IND-510,FRANCE,2023-09-30,NAT,39480,39480,,0
+IND-510,FRANCE,2026-12-31,NAT,,,52000,
