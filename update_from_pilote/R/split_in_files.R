@@ -15,6 +15,9 @@ split_in_files <- function(indic_data, export_config_filepath, export_name) {
   
   ROOT_OUT_DIR <- '../data/exports/'
   OUT_DIR <- paste0(ROOT_OUT_DIR, export_name, "/")
+  # delete dir
+  unlink(OUT_DIR, recursive = TRUE)
+  # create dir
   dir.create(OUT_DIR, showWarnings = FALSE)
   
   # Df filtré en ne gardant que les indicateurs qui sont spécifiés pour cet export
